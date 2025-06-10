@@ -1,70 +1,50 @@
-
-name: CI
+name: Build and Release APK on GitHub
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-  workflow_dispatch:
-
+    tags:
+      - "v*"  # Trigger on tags like v1.0.0, v2.3.5, etc.
 jobs:
-  build:
+  build-and-distribute:
     runs-on: ubuntu-latest
 
+    env:
+      KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+      SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup JDK
-        uses: actions/setup-java@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: '17'
-          distribution: 'zulu'
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      - name: Build
-        run: ./gradlew build
+      - name: Restore keystore
+        run: echo "$KEYSTORE_FILE" | base64 -d > app/playstore.keystore.jks
 
-      - name: Assemble Release Bundle
-        run: ./gradlew assembleRelease
+      - name: Build signed APK
+        run: ./gradlew assembleRelease -PSIGNING_KEY_ALIAS=$SIGNING_KEY_ALIAS -PKEYSTORE_PASSWORD=$KEYSTORE_PASSWORD -PKEYSTORE_FILE=app/playstore.keystore.jks -PSIGNING_KEY_PASSWORD=$SIGNING_KEY_PASSWORD
 
-#      - name: Sign Release
-#        id: sign_aab
-#        uses: r0adkll/sign-android-release@v1
-#        with:
-#          releaseDirectory: app/build/outputs/apk/release
-#          signingKeyBase64: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
-#          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
-#          keyStorePassword: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
-#          keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-#        env:
-#          # override default build-tools version (29.0.3) -- optional
-#          BUILD_TOOLS_VERSION: "29.0.3"
-#
-#      - run: echo "Build status report=${{ job.status }}."
-#
-#      - name: Upload APK
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: app
-#          path: app/build/outputs/apk/release
+      - name: Get release version from tag
+        id: get_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
-#      - name: Build APK
-#        run: bash ./gradlew assembleDebug --stacktrace
-#      - name: Upload APK
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: app-debug.apk
-#          path: app/build/outputs/apk/debug/app-debug.apk
-
-#      - name: Build Release APK
-#        env:
-#          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-#          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-#          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-#          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-#        run: bash ./gradlew assembleRelease
+      - name: Upload APK to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release v${{ env.RELEASE_VERSION }}
+          body: "APK release for version ${{ env.RELEASE_VERSION }}"
+          files: |
+            app/build/outputs/apk/**/*.apk
+          draft: false
+          prerelease: false
