@@ -1,113 +1,100 @@
+import java.util.Properties
+
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
-    namespace 'com.davi.dev.birdtap'
-    compileSdk  33
+    namespace = "com.davi.dev.blazebird"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId "com.davi.dev.birdtap"
-        minSdk 30
-        targetSdk 33
-        versionCode 3
-        versionName "1.2"
+        applicationId = "com.davi.dev.blazebird"
+        minSdk = 30
+        targetSdk = 35
+        versionCode = 4
+        versionName = "2.0.0"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true // Property assignment
         }
-
     }
 
     signingConfigs {
-        debug{
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
-        }
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+        if (keystorePropertiesFile.exists()) {
+            register("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        } else {
+            logger.warn("Warning Signing: No signing config found. Build will be unsigned.")
         }
     }
 
     buildTypes {
-        debug{
-            signingConfig signingConfigs.debug
+        debug {
+            applicationIdSuffix = ".debug"
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                logger.warn("Warning Release: No signing config found. Build will be unsigned.")
+            }
         }
     }
-
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildFeatures {
-        compose true
-    }
+
     composeOptions {
-        kotlinCompilerExtensionVersion '1.3.2'
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    buildFeatures {
+        compose = true
     }
 }
 
 dependencies {
+    implementation(libs.play.services.wearable)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.wear.tooling.preview)
+    implementation(libs.activity.compose)
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
-    implementation 'com.google.android.gms:play-services-wearable:18.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.compose.material)
 
-    // Wear Material
-    implementation "androidx.wear.compose:compose-material:$wear_compose_version"
-    implementation "androidx.wear.compose:compose-foundation:$wear_compose_version"
+    implementation(libs.androidx.material3.android)
+    implementation(libs.navigation.compose)
+    implementation(libs.runtime.livedata.compose)
+    implementation(libs.play.services.wearable)
 
-    //  Navigation
-    implementation "androidx.navigation:navigation-compose:2.5.3"
-    implementation "androidx.navigation:navigation-runtime-ktx:2.5.3"
+    implementation(libs.core.splashscreen)
 
-    // Material
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    implementation 'androidx.compose.material:material-icons-core:1.3.1'
-
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.0"
-
-    implementation 'androidx.activity:activity-compose:1.5.1'
-
-    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 }

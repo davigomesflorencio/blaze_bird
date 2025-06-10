@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "flappybird"
-include ':app'
+rootProject.name = "Bird Tap"
+include(":app")
