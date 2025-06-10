@@ -1,4 +1,4 @@
-package com.davi.dev.birdtap.presentation.screen.flappy
+package com.davi.dev.blazebird.presentation.screen.flappy
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

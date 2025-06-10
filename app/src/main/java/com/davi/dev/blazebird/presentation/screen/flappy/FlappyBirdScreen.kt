@@ -1,4 +1,4 @@
-package com.davi.dev.birdtap.presentation.screen.flappy
+package com.davi.dev.blazebird.presentation.screen.flappy
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
 import androidx.wear.tooling.preview.devices.WearDevices.SMALL_ROUND
-import com.davi.dev.birdtap.R
+import com.davi.dev.blazebird.R
 
 val skyColor = Color(0xFF74B9F5)
 val lightGreen = Color(0xFF75B6E0)
@@ -88,7 +88,7 @@ fun GameArea(viewModel: FlappyBirdViewModel, modifier: Modifier) {
                 .fillMaxSize()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.background_chamas),
+                painter = painterResource(id = R.drawable.ic_bg_blaze),
                 contentDescription = "",
                 modifier = Modifier.fillMaxSize()
             )

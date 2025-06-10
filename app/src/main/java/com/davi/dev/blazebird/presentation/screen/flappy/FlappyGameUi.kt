@@ -1,4 +1,4 @@
-package com.davi.dev.birdtap.presentation.screen.flappy
+package com.davi.dev.blazebird.presentation.screen.flappy
 
 sealed class FlappyGameUi {
 

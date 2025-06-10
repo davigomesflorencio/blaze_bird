@@ -1,11 +1,11 @@
-package com.davi.dev.birdtap.presentation.navigation
+package com.davi.dev.blazebird.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.davi.dev.birdtap.presentation.screen.flappy.FlappyBirdScreen
-import com.davi.dev.birdtap.presentation.screen.splash.AnimatedSplashScreen
+import com.davi.dev.blazebird.presentation.screen.flappy.FlappyBirdScreen
+import com.davi.dev.blazebird.presentation.screen.splash.AnimatedSplashScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {

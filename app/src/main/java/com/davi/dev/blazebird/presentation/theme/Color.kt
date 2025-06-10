@@ -1,4 +1,4 @@
-package com.davi.dev.birdtap.presentation.theme
+package com.davi.dev.blazebird.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.wear.compose.material.Colors

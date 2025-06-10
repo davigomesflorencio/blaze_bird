@@ -3,7 +3,6 @@ package com.davi.dev.blazebird.presentation.screen.splash
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -32,13 +31,13 @@ fun AnimatedSplashScreen(navController: NavHostController) {
 @Composable
 fun Splash() {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(if (isSystemInDarkTheme()) Color.Black else Color(0XFF48f542))
+            .background(Color.Black)
             .fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = if (isSystemInDarkTheme()) R.drawable.icons_flappy_v2_dark else R.drawable.icons_flappy_v2),
+            painter = painterResource(id = R.drawable.ic_logo_v2),
             contentDescription = "Bird icon",
             modifier = Modifier
                 .fillMaxSize()
