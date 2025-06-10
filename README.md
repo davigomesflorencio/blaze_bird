@@ -1,4 +1,4 @@
-# Bird Tap (App para WearOS)
+# Blaze Bird (App para WearOS)
 
 <div>
 <img src="assets/images/recurso_grafico.png" alt="drawing" style="width:600px;"/>
@@ -6,7 +6,7 @@
 
 ## Descrição
 
-Prepare-se para embarcar em uma jornada emocionante e viciante que vai testar suas habilidades e reflexos ao máximo. Inspirado pelo clássico Flappy Bird, o Bird Tap é um jogo incrível projetado para dispositivos Wear OS, que vai te cativar desde o primeiro toque na tela.
+Em Asas de Fogo, o desafio é simples para smartwatch com WearOs: toque para voar e desvie dos perigos incandescentes . Cada toque é um passo mais perto do caos (ou da glória). Gráficos quentes, ação rápida e muita raiva envolvida. Quantos pontos você consegue antes de virar cinzas?
 
 ## Tecnologias utilizadas
 
@@ -21,13 +21,15 @@ Prepare-se para embarcar em uma jornada emocionante e viciante que vai testar su
 ## Preview
 
 <div>
-<img src="assets/images/Icon1.png" alt="drawing" style="width:200px;"/>
-<img src="assets/images/Icon2.png" alt="drawing" style="width:200px;"/>
-<img src="assets/images/Icon3.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_dark_1.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_dark_2.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_dark_3.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_dark_4.png" alt="drawing" style="width:200px;"/>
 <div>
 
 <div>
-<img src="assets/images/photo_1.jpg" alt="drawing" style="width:200px;"/>
-<img src="assets/images/photo_2.jpg" alt="drawing" style="width:200px;"/>
-<img src="assets/images/photo_3.jpg" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_light_1.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_light_2.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_light_3.png" alt="drawing" style="width:200px;"/>
+<img src="assets/images/ic_light_4.png" alt="drawing" style="width:200px;"/>
 <div>
